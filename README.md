@@ -42,8 +42,6 @@ Based on 2024 research, FastAPI is the optimal choice for AI-integrated language
    ```
 
 4. Set up environment variables:
-   ```bash
-   cp .env.example .env
    # Edit .env and add your OpenAI API key
    ```
 
@@ -57,20 +55,10 @@ The API will be available at `http://localhost:8000` with interactive docs at `h
 ## API Endpoints
 
 - `GET /` - Health check
-- `POST /translate` - Translate text with learning explanation
-- `POST /practice` - Generate practice exercises
+- `POST /translate` - Get array of translations of words from a large piece of text
+- `POST /grammar` - Get detailed translation and grammar explanations from ChatGPT
 - `GET /health` - System health status
 
-## Frontend Setup (Next Steps)
-
-Create a React app in the frontend directory:
-```bash
-cd frontend
-npx create-react-app . --template typescript
-npm install axios  # For API calls
-```
-
-## Features Implemented
 
 - ✅ FastAPI backend with CORS support
 - ✅ OpenAI integration for AI-powered features
