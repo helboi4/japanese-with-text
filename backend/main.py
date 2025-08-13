@@ -5,12 +5,14 @@ import openai
 import os
 from dotenv import load_dotenv
 from jamdict import Jamdict
-
+from konoha import SentenceTokenizer
+from konoha import WordTokenizer
 # Load environment variables
 load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(title="Language Learning API", version="1.0.0")
+jam = Jamdict()
 
 # Configure CORS for React frontend
 app.add_middleware(
@@ -36,17 +38,39 @@ class GrammarResponse(BaseModel):
     explanation: str
     difficulty_level: str
 
+class TranslatedWord(BaseModel):
+    original_word: str
+    dict_entries: list
+    dict_chars: list
+
 class TranslateResponse(BaseModel):
-
-
+    translated_words: list[TranslatedWord]
+    
 
 # API Routes
 @app.get("/")
 async def root():
     return {"message": "Language Learning API is running!"}
 
-@app.post("/translate-text")
-def translate()
+@app.post("/translate-text", response_model=TranslateResponse)
+def translate(request: TextRequest):
+    sentence_tokenizer = SentenceTokenizer(period="。")
+    sentence_split_text: list[str] = sentence_tokenizer.tokenize(request.text)
+    word_tokenizer = WordTokenizer("Sentencepiece", model_path="sentence-model/model.spm")
+    tokenized_text = []
+    for sentence in sentence_split_text:
+        tokenized_text.extend(word_tokenizer.tokenize(sentence))
+    response: TranslateResponse = TranslateResponse(translated_words=[])
+    for word in tokenized_text:
+        result = jam.lookup(word)
+        translated_word = TranslatedWord(
+            original_word = word,
+            dict_entries = list(result.entries),
+            dict_chars = result.chars
+        )
+        response.translated_words.append(word)
+    return response
+        
 
 @app.post("/grammar", response_model=GrammarResponse)
 def explain_grammar(request: TextRequest):
