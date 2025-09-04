@@ -4,15 +4,16 @@ from pydantic import BaseModel
 import openai
 import os
 from dotenv import load_dotenv
-from jamdict import Jamdict
-from konoha import SentenceTokenizer
-from konoha import WordTokenizer
+from sudachipy import tokenizer
+from sudachipy import dictionary
 # Load environment variables
 load_dotenv()
 
+sudict = dictionary.Dictionary().create()
+mode = tokenizer.Tokenizer.SplitMode.C
+
 # Initialize FastAPI app
 app = FastAPI(title="Language Learning API", version="1.0.0")
-jam = Jamdict()
 
 # Configure CORS for React frontend
 app.add_middleware(
@@ -54,22 +55,9 @@ async def root():
 
 @app.post("/translate-text", response_model=TranslateResponse)
 def translate(request: TextRequest):
-    sentence_tokenizer = SentenceTokenizer(period="。")
-    sentence_split_text: list[str] = sentence_tokenizer.tokenize(request.text)
-    word_tokenizer = WordTokenizer("Sentencepiece", model_path="sentence-model/model.spm")
-    tokenized_text = []
-    for sentence in sentence_split_text:
-        tokenized_text.extend(word_tokenizer.tokenize(sentence))
-    response: TranslateResponse = TranslateResponse(translated_words=[])
-    for word in tokenized_text:
-        result = jam.lookup(word)
-        translated_word = TranslatedWord(
-            original_word = word,
-            dict_entries = list(result.entries),
-            dict_chars = result.chars
-        )
-        response.translated_words.append(word)
-    return response
+    tokenized_text = [m.surface() for for m in sudict.tokenize(text, mode)]
+    translated_words = []
+    return TranslateResponse(translated_words=translated_words)
         
 
 @app.post("/grammar", response_model=GrammarResponse)
