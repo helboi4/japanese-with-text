@@ -6,6 +6,8 @@ import os
 from dotenv import load_dotenv
 from sudachipy import tokenizer
 from sudachipy import dictionary
+from custom_types import Mode, TranslateResponse, TextRequest, GrammarResponse
+import dict_repository
 # Load environment variables
 load_dotenv()
 
@@ -28,26 +30,6 @@ app.add_middleware(
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Pydantic models for request/response
-class TextRequest(BaseModel):
-    text: str
-    target_language: str = "Japanese"
-    user_level: str = "beginner"
-
-class GrammarResponse(BaseModel):
-    original_text: str
-    translated_text: str
-    explanation: str
-    difficulty_level: str
-
-class TranslatedWord(BaseModel):
-    original_word: str
-    dict_entries: list
-    dict_chars: list
-
-class TranslateResponse(BaseModel):
-    translated_words: list[TranslatedWord]
-    
-
 # API Routes
 @app.get("/")
 async def root():
@@ -57,8 +39,9 @@ async def root():
 def translate(request: TextRequest):
     tokenized_text = [m.surface() for for m in sudict.tokenize(text, mode)]
     translated_words = []
+    for item in kanji_morphs:
+        translated_words[item.get("i")] = item.get("m")
     return TranslateResponse(translated_words=translated_words)
-        
 
 @app.post("/grammar", response_model=GrammarResponse)
 def explain_grammar(request: TextRequest):
