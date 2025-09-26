@@ -1,49 +1,99 @@
-import psycopg
-import os
+from psycopg import OperationalError, DataError, IntegrityError, ProgrammingError
+from psycopg_pool import ConnectionPool
+from os import environ
 import logging
 from psycopg.rows import DictRow, dict_row
 from custom_types import Mode
+import atexit
 
-
-db_settings = {
-    "host": os.getenv("DB_HOST"),
-    "port" : os.getenv("DB_PORT"),
-    "dbname" : os.getenv("DB_NAME"),
-    "user" : os.getenv("DB_USER"),
-    "connect_timeout" : os.getenv("DB_TIMEOUT")
-}
+db_settings = f"""host={environ.get("DB_HOST")}
+    port={environ.get("DB_PORT")}
+    dbname={environ.get("DB_NAME")}
+    user={environ.get("DB_USER")}
+    connect_timeout={environ.get("DB_TIMEOUT")}"""
 
 logging.basicConfig(level=logging.DEBUG, format="%(ascitime)s %(levelname)s %(messages)s")
 logging.getLogger("psycopg").setLevel(logging.DEBUG)
 log = logging.getLogger(__name__)
 logging.getLogger("psycopg").setLevel(logging.ERROR)
 
-#TODO: Create a method that creates a connection and assigns it to a global parameter in this file to be used by all methods. The connection method can then be called by each route, creating a db session for the whole route whenever needed instead of one for each method here.
+dict_con_pool: ConnectionPool | None = None
 
+def create_dict_connection_pool() -> bool:
+    global dict_con_pool
+    try:
+        dict_con_pool = ConnectionPool(conninfo=db_settings, min_size=2, max_size=10, timeout=30)
+        dict_con_pool.wait()
+        log.info("Dictionary db connection pool available")
+        atexit.register(cleanup_dict_connection_pool)
+        return True
+    except OperationalError as e:
+        log.error(f"Unable to create db pool for dictionary: {str(e)}")
+        return False
+
+def cleanup_dict_connection_pool() -> None:
+    global dict_con_pool
+    if(dict_con_pool == None):
+        log.debug("Dictionary db pool does not exist, cannot be cleaned up")
+        return
+    try:
+        dict_con_pool.close()
+        dict_con_pool = None
+        log.info("Dictionary db pool closed sucessfully")
+    except OperationalError as e:
+        log.debug(f"Dictionary db connection pool could not be closed: {str(e)}")
+
+def get_dict_connection_pool() -> ConnectionPool | None:
+    global dict_con_pool
+    if(dict_con_pool == None):
+        log.error("No connection pool available, aborting")
+        return None
+    return dict_con_pool
 
 def get_dict_entries_for_text(morphemes: list[str]) -> list[list[DictRow]]:
+    con_pool = get_dict_connection_pool()
+    if (con_pool == None):
+        return []
     if(len(morphemes) <= 0):
         return []
     try:
-        with psycopg.connect(**db_settings) as con:
+        with con_pool.connection() as con:
             try:
                 results = []
                 with con.cursor(row_factory=dict_row) as cur:
                     for m in morphemes:
                         mode = get_mode(m)
                         query: str = f"SELECT * FROM entries WHERE word_{mode.value} @> array[%s];"
-                        cur.execute(query)
+                        cur.execute(query, m)
                         results.append(cur.fetchall())
                     return results
-            except (psycopg.DataError, psycopg.IntegrityError, psycopg.ProgrammingError, TypeError) as e:
-                log.debug(f"Entry selectionfailed: {str(e)}")
+            except (DataError, IntegrityError, ProgrammingError, TypeError) as e:
+                log.debug(f"Entry selection failed: {str(e)}")
                 return []
-    except psycopg.OperationalError as e:
-        log.error(f"Unable to establish db connection: {str(e)}")
+    except OperationalError as e:
+        log.error(f"Unable to establish db connection for entry retrieval: {str(e)}")
         return []
 
-def get_senses_by_entry_id(id: int):
-     
+def get_senses_by_entry_id(id: int) -> list[DictRow]:
+    con_pool = dict_con_pool
+    if(con_pool == None):
+        return []
+    try:
+        with con_pool.connection() as con:
+            try:
+                with con.cursor(row_factory=dict_row) as cur:
+                    query: str = "SELECT definitions, extra_info FROM senses WHERE entry_id = %s"
+                    cur.execute(query,str(id))
+                    return cur.fetchall()
+            except (DataError, IntegrityError, ProgrammingError, TypeError) as e:
+                log.debug(f"Sense selection failed for entry id {id}: {str(e)}")
+                return []
+    except OperationalError as e:
+        log.error(f"Unable to establish db connection for sense retrieval: {str(e)}")
+        return []
+    
+    #TODO: consider that actually i want to throw errors when unable to get entries or senses from the db because i need to know the difference between there just not being any entries vs there being an error
+
 
 def get_mode(morpheme:str) -> Mode:
     if(0x4E00 <=ord(morpheme[0]) >= 0x9FAF or 0x4E00 <=ord(morpheme[1]) >= 0x9FAF):
