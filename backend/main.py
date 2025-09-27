@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from sudachipy import tokenizer
 from sudachipy import dictionary
 from custom_types import Mode, TranslateResponse, TextRequest, GrammarResponse
-import dict_repository
+import dict_service
 # Load environment variables
 load_dotenv()
 
@@ -37,11 +37,9 @@ async def root():
 
 @app.post("/translate-text", response_model=TranslateResponse)
 def translate(request: TextRequest):
-    tokenized_text = [m.surface() for for m in sudict.tokenize(text, mode)]
-    translated_words = []
-    for item in kanji_morphs:
-        translated_words[item.get("i")] = item.get("m")
-    return TranslateResponse(translated_words=translated_words)
+    text = request.text
+    tokenized_text = [m.surface() for m in sudict.tokenize(text, mode)]
+    return dict_service.get_translate_response(tokenized_text)
 
 @app.post("/grammar", response_model=GrammarResponse)
 def explain_grammar(request: TextRequest):

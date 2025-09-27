@@ -4,8 +4,6 @@ from psycopg.rows import DictRow
 
 class TextRequest(BaseModel):
     text: str
-    target_language: str = "Japanese"
-    user_level: str = "beginner"
 
 class GrammarResponse(BaseModel):
     original_text: str
