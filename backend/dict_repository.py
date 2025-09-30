@@ -1,10 +1,12 @@
-from psycopg import OperationalError, DataError, IntegrityError, ProgrammingError
+from psycopg import OperationalError, DataError, IntegrityError, ProgrammingError, connect
 from psycopg_pool import ConnectionPool
 from os import environ
 import logging
 from psycopg.rows import DictRow, dict_row
 from custom_types import Mode
-import atexit
+from dotenv import load_dotenv
+
+load_dotenv()
 
 db_settings = f"""host={environ.get("DB_HOST")}
     port={environ.get("DB_PORT")}
@@ -12,8 +14,7 @@ db_settings = f"""host={environ.get("DB_HOST")}
     user={environ.get("DB_USER")}
     connect_timeout={environ.get("DB_TIMEOUT")}"""
 
-logging.basicConfig(level=logging.DEBUG, format="%(ascitime)s %(levelname)s %(messages)s")
-logging.getLogger("psycopg").setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(messages)s")
 log = logging.getLogger(__name__)
 logging.getLogger("psycopg").setLevel(logging.ERROR)
 
@@ -24,8 +25,7 @@ def create_dict_connection_pool() -> bool:
     try:
         dict_con_pool = ConnectionPool(conninfo=db_settings, min_size=2, max_size=10, timeout=30)
         dict_con_pool.wait()
-        log.info("Dictionary db connection pool available")
-        atexit.register(cleanup_dict_connection_pool)
+        log.debug("Dictionary db connection pool available")
         return True
     except OperationalError as e:
         log.error(f"Unable to create db pool for dictionary: {str(e)}")
@@ -63,8 +63,15 @@ def get_dict_entries_for_text(morphemes: list[str]) -> list[list[DictRow]]:
                 with con.cursor(row_factory=dict_row) as cur:
                     for m in morphemes:
                         mode = get_mode(m)
-                        query: str = f"SELECT * FROM entries WHERE word_{mode.value} @> array[%s];"
-                        cur.execute(query, m)
+                        query: str = ""
+                        if(mode == Mode.KANA):
+                            query = """
+                                SELECT * FROM entries WHERE word_kana @> ARRAY[%s] ORDER BY 
+                                (COALESCE(array_length(word_kanji, 1), 0) > 0)::int, id;
+                                """
+                        else:
+                            query = "SELECT * FROM entries WHERE word_kanji @> array[%s];"
+                        cur.execute(query, (m,))
                         results.append(cur.fetchall())
                     return results
             except (DataError, IntegrityError, ProgrammingError, TypeError) as e:
@@ -83,7 +90,7 @@ def get_senses_by_entry_id(id: int) -> list[DictRow]:
             try:
                 with con.cursor(row_factory=dict_row) as cur:
                     query: str = "SELECT definitions, extra_info FROM senses WHERE entry_id = %s"
-                    cur.execute(query,str(id))
+                    cur.execute(query,(id,))
                     return cur.fetchall()
             except (DataError, IntegrityError, ProgrammingError, TypeError) as e:
                 log.debug(f"Sense selection failed for entry id {id}: {str(e)}")
@@ -96,6 +103,7 @@ def get_senses_by_entry_id(id: int) -> list[DictRow]:
 
 
 def get_mode(morpheme:str) -> Mode:
-    if(0x4E00 <=ord(morpheme[0]) >= 0x9FAF or 0x4E00 <=ord(morpheme[1]) >= 0x9FAF):
-        return Mode.KANJI
+    for m in list(morpheme):
+        if(0x4E00 <=ord(m) >= 0x9FAF):
+            return Mode.KANJI
     return Mode.KANA

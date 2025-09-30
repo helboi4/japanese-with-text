@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -14,8 +15,14 @@ load_dotenv()
 sudict = dictionary.Dictionary().create()
 mode = tokenizer.Tokenizer.SplitMode.C
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    dict_service.initialise_pool()
+    yield
+    dict_service.close_pool()
+
 # Initialize FastAPI app
-app = FastAPI(title="Language Learning API", version="1.0.0")
+app = FastAPI(title="Language Learning API", version="1.0.0", lifespan=lifespan)
 
 # Configure CORS for React frontend
 app.add_middleware(
@@ -25,9 +32,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Initialize OpenAI client
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Pydantic models for request/response
 # API Routes
@@ -39,37 +43,8 @@ async def root():
 def translate(request: TextRequest):
     text = request.text
     tokenized_text = [m.surface() for m in sudict.tokenize(text, mode)]
+    print(tokenized_text)
     return dict_service.get_translate_response(tokenized_text)
-
-@app.post("/grammar", response_model=GrammarResponse)
-def explain_grammar(request: TextRequest):
-    """Translate text and provide learning explanation"""
-    try:
-        response = openai.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": f"You are a helpful language learning assistant who is an expert in Japanese grammar. Translate the given text to {request.target_language} and provide a beginner-friendly explanation of the grammar concepts with extra example sentences which make the grammar concepts easier to understand."
-                },
-                {
-                    "role": "user",
-                    "content": f"Translate this text to {request.target_language} and explain the reasoning beind the grammar in it for a {request.user_level} Japanese language learner: {request.text}"
-                }
-            ]
-        )
-        
-        # Parse the AI response (you might want to structure this better)
-        ai_response = response.choices[0].message.content
-        
-        return GrammarResponse(
-            original_text=request.text,
-            translated_text=ai_response.split('\n')[0],  # Simplified parsing
-            explanation=ai_response,
-            difficulty_level=request.user_level
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
 async def health_check():

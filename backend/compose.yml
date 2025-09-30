@@ -4,11 +4,9 @@ services:
     container_name: japanese-dict-db
     ports:
       - "5234:5432"
-    environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-secure_admin_pass}
     volumes:
-      - ./dictionary_db/init-readonly-user.sql:/docker-entrypoint-initdb.d/99-readonly-user.sql
-      - ./dictionary_db/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./dictionary_db/init-readonly-user.sql:/docker-entrypoint-initdb.d/98-readonly-user.sql
+      - ./dictionary_db/setup-pg-hba.sh:/docker-entrypoint-initdb.d/99-setup-pg-hba.sh
     restart: unless-stopped
     env_file:
       - ./dictionary_db/.env
