@@ -26,7 +26,6 @@ def get_translate_response(morphemes: list[str]):
         dict_entries: list[DictEntry] = []
         for row in row_list:
             senses: list[DictRow] = dict_repository.get_senses_by_entry_id(row.get("id"))
-            print(senses)
             sense_list: list[Sense] = []
             for s in senses:
                 sense = Sense(

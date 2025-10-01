@@ -14,7 +14,7 @@ db_settings = f"""host={environ.get("DB_HOST")}
     user={environ.get("DB_USER")}
     connect_timeout={environ.get("DB_TIMEOUT")}"""
 
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(messages)s")
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.DEBUG)
 log = logging.getLogger(__name__)
 logging.getLogger("psycopg").setLevel(logging.ERROR)
 
