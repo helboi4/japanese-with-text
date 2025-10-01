@@ -1,2 +1,4 @@
 backend/.env
 backend/.venv
+backend/dictionary_db/.env
+backend/__pycache__
