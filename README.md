@@ -1,77 +1,26 @@
 # Language Learning App
 
-A React frontend with FastAPI backend for AI-powered language learning.
+A language learning web app for learning and practicing Japanese with text, built with python and nextjs.
 
-## Why FastAPI?
+Currently in progress.
 
-Based on 2024 research, FastAPI is the optimal choice for AI-integrated language learning apps because:
+# The Vision
 
-- **Superior Performance**: Outperforms Flask in async performance under high concurrency
-- **Native Async Support**: Built-in async/await makes it faster and more scalable for AI API calls
-- **Industry Standard**: Specifically recommended for React + Python backend architecture
-- **Beginner-Friendly**: Easy OpenAI integration with excellent documentation
-- **Auto-Generated Docs**: Interactive API documentation at `/docs`
+When I set out to learn Japanese in around 2014, I found myself in an online Japanese language learning community that was tightly in communion with the open source community. Thanks to the people on the many forums at the time (rip the rtk forum) I was introduced to github for the first time and used many open source language learning software tools in my journey.
 
-## Project Structure
+This is a love letter to that scene.
 
-```
-├── backend/          # FastAPI Python backend
-│   ├── main.py      # Main FastAPI application
-│   ├── requirements.txt
-│   └── .env.example
-├── frontend/         # React frontend (to be created)
-└── README.md
-```
+# Feature progress
 
-## Backend Setup
-
-1. Navigate to backend directory:
-   ```bash
-   cd backend
-   ```
-
-2. Create virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Set up environment variables:
-   # Edit .env and add your OpenAI API key
-   ```
-
-5. Run the server:
-   ```bash
-   python main.py
-   ```
-
-The API will be available at `http://localhost:8000` with interactive docs at `http://localhost:8000/docs`.
-
-## API Endpoints
-
-- `GET /` - Health check
-- `POST /translate` - Get array of translations of words from a large piece of text
-- `POST /grammar` - Get detailed translation and grammar explanations from ChatGPT
-- `GET /health` - System health status
-
-
-- ✅ FastAPI backend with CORS support
-- ✅ OpenAI integration for AI-powered features
-- ✅ Text translation with explanations
-- ✅ Practice exercise generation
-- ✅ Type-safe API with Pydantic models
-- ✅ Automatic API documentation
-
-## Next Steps
-
-1. Set up React frontend
-2. Create language learning components
-3. Implement user authentication
-4. Add database for user progress
-5. Enhance AI prompts for better learning outcomes
-
+[x] [Custom Japanese-English dictionary psql database](https://github.com/helboi4/japanese-dict-db) with indexing for kanji and kana words for quick lookup
+[x] API endpoint that parses large blocks of Japanese text into individual words and sends back json containing each word and its possible definitions from the db
+[ ] [ML model made with TensorFlow](https://github.com/helboi4/tensorflow-translation-model/tree/main) that understands how to translate Japanese into English
+[ ] API endpoint that calls the model and retruns English text
+[ ] Frontend textbox form that calls the above two endpoints on submit and displays the data
+[ ] Frontend interactive display of the original Japanese text that shows definitions on click of the word, side by side with english translation
+[ ] API endpoint that takes a list of saved words and creates an anki deck from them and download button on frontend
+[ ] Login functionality (user db, endpoints, UI)
+[ ] Functionality to keep saved words for later
+[ ] Proprietary SRS algorithm that saves users progress to the db
+[ ] Flashcard UI on new frontend page
+[ ] Implementation of smart flashcard ordering a la [morphman](https://github.com/kaegi/MorphMan)
