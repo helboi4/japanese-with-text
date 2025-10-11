@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 from sudachipy import tokenizer
 from sudachipy import dictionary
-from custom_types import Mode, TranslateResponse, TextRequest, GrammarResponse
+from custom_types import Mode, LookupResponse, TextRequest, GrammarResponse
 import dict_service
 # Load environment variables
 load_dotenv()
@@ -39,12 +39,12 @@ app.add_middleware(
 async def root():
     return {"message": "Language Learning API is running!"}
 
-@app.post("/translate-text", response_model=TranslateResponse)
+@app.post("/lookup-text", response_model=LookupResponse)
 def translate(request: TextRequest):
     text = request.text
     tokenized_text = [m.surface() for m in sudict.tokenize(text, mode)]
     print(tokenized_text)
-    return dict_service.get_translate_response(tokenized_text)
+    return dict_service.get_lookup_response(tokenized_text)
 
 @app.get("/health")
 async def health_check():

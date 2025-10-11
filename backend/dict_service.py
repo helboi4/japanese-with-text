@@ -1,7 +1,7 @@
 import dict_repository
 from psycopg.rows import DictRow
 from pydantic import BaseModel
-from custom_types import Sense, DictEntry, TranslatedWord, TranslateResponse
+from custom_types import Sense, DictEntry, DefinedWord, LookupResponse
 
 def initialise_pool() -> None:
     dict_repository.create_dict_connection_pool()
@@ -9,15 +9,15 @@ def initialise_pool() -> None:
 def close_pool() -> None:
     dict_repository.cleanup_dict_connection_pool()
 
-def get_translate_response(morphemes: list[str]):
+def get_lookup_response(morphemes: list[str]):
     dict_rows_list: list[list[DictRow]] = dict_repository.get_dict_entries_for_text(morphemes)
     if(len(dict_rows_list) <=0):
-        return TranslateResponse(translated_words=[])
-    translated_words: list[TranslatedWord] = []
+        return LookupResponse(defined_words=[])
+    translated_words: list[DefinedWord] = []
     for row_list, m in zip(dict_rows_list, morphemes):
         if(len(row_list) <= 0):
             translated_words.append(
-                TranslatedWord(
+                DefinedWord(
                     original_word=m,
                     dict_entries=[]
                 )
@@ -39,11 +39,11 @@ def get_translate_response(morphemes: list[str]):
                 senses=sense_list
             )
             dict_entries.append(de)
-        tw = TranslatedWord(
+        tw = DefinedWord(
             original_word=m,
             dict_entries=dict_entries
         )
         translated_words.append(tw)
-    return TranslateResponse(
-        translated_words=translated_words
+    return LookupResponse(
+        defined_words=translated_words
     )

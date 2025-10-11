@@ -21,12 +21,12 @@ class DictEntry(BaseModel):
     senses: list[Sense]
 
 
-class TranslatedWord(BaseModel):
+class DefinedWord(BaseModel):
     original_word: str
     dict_entries: list[DictEntry]
 
-class TranslateResponse(BaseModel):
-    translated_words: list[TranslatedWord]
+class LookupResponse(BaseModel):
+    defined_words: list[DefinedWord]
     
 class LookupObject(BaseModel):
     kanji_rows: list[DictRow]
