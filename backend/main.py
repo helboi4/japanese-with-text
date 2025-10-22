@@ -1,16 +1,16 @@
+from dotenv import load_dotenv
+load_dotenv()
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import openai
-import os
-from dotenv import load_dotenv
 from sudachipy import tokenizer
 from sudachipy import dictionary
-from custom_types import Mode, LookupResponse, TextRequest, GrammarResponse
+from custom_types import Mode, LookupResponse, TextRequest, GrammarResponse, TranslateResponse
 import dict_service
+import translate_service
 # Load environment variables
-load_dotenv()
 
 sudict = dictionary.Dictionary().create()
 mode = tokenizer.Tokenizer.SplitMode.C
@@ -40,11 +40,19 @@ async def root():
     return {"message": "Language Learning API is running!"}
 
 @app.post("/lookup-text", response_model=LookupResponse)
-def translate(request: TextRequest):
+def lookup_text(request: TextRequest):
     text = request.text
     tokenized_text = [m.surface() for m in sudict.tokenize(text, mode)]
     print(tokenized_text)
     return dict_service.get_lookup_response(tokenized_text)
+
+@app.post("/translate-text", response_model=TranslateResponse)
+def translate(request: TextRequest):
+    text = request.text
+    translate_result = translate_service.translate_text(text)
+    if not translate_result:
+        raise HTTPException(status_code=500, detail="Translator unavailable")
+    return translate_result
 
 @app.get("/health")
 async def health_check():

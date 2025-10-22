@@ -31,6 +31,9 @@ class LookupResponse(BaseModel):
 class LookupObject(BaseModel):
     kanji_rows: list[DictRow]
     kana_rows: list[DictRow]
+
+class TranslateResponse(BaseModel):
+    translated_text: str
     
 class Mode(Enum):
     KANJI = "kanji"

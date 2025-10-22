@@ -4,10 +4,13 @@ sqlmodel==0.0.24
 uvicorn==0.24.0
 python-multipart==0.0.6
 pydantic==2.5.0
-openai==1.3.7
-python-dotenv==1.0.0
 httpx==0.25.2
 SudachiPy==0.6.10
 sudachidict_core==20250825
 psycopg==3.2.9
 psycopg_pool==3.2.6
+numpy==2.1.3
+tensorflow==2.19.0
+tensorflow-text==2.19.0
+transformers[torch]==4.57.1
+bitsandbytes==0.48.1
