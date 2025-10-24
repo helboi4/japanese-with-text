@@ -1,3 +1,5 @@
+'use server'
+
 const BASE_URL = process.env.API_URL
 
 class TextProcessService extends BaseApi {
@@ -29,4 +31,14 @@ class TextProcessService extends BaseApi {
 		)
 		return this.do_request(request, "Unable to translate text")
 	}
+}
+
+const service = new TextProcessService()
+
+export async function translateText(text: string) {
+	return service.get_translation(text)
+}
+
+export async function lookupText(text: string) {
+	return service.get_lookup(text)
 }

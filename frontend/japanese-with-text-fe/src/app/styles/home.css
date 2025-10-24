@@ -1,0 +1,30 @@
+.cta {
+	overflow: visible;
+	margin-right: 20px;
+	margin-left: 20px;
+}
+
+.cta h2 {
+	width: fit-content;
+	text-align: center;
+	margin: 20px auto;
+	color: var(--yellow);
+	transition: transform 0.3s ease-out;
+}
+
+.main-content:has(.text-box:hover) .cta h2 {
+	animation: bounce 1s ease-in-out infinite;
+
+}
+
+@keyframes bounce {
+
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(-5px);
+	}
+}

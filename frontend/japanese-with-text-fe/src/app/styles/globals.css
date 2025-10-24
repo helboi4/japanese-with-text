@@ -1,0 +1,81 @@
+:root {
+	--white: #FFFF;
+	--yellow: #FFE135;
+	--pink: #ED64D8;
+	--sky-blue: #6495ED;
+	--shadow-blue: #1650BB;
+}
+
+body {
+	background: var(--sky-blue);
+	min-height: 100vh;
+	margin: 0;
+}
+
+h1 {
+	color: var(--white);
+	font-family: var(--font-red-hat), sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 200;
+	font-style: normal;
+}
+
+h2 {
+	font-family: var(--font-space-mono), monospace;
+	font-weight: 300;
+}
+
+p {
+	font-family: var(--font-space-mono), monospace;
+	font-weight: 400;
+	font-style: normal;
+}
+
+button {
+	border: none;
+	font-family: var(--font-space-mono), monospace;
+	color: var(--white);
+	font-size: 20px;
+	padding: 20px 20px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.action-button {
+	background-color: var(--pink);
+	filter: drop-shadow(4px 2px 2px var(--shadow-blue));
+}
+
+.action-button:hover {
+	animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+	10%,
+	90% {
+		transform: translate3d(-1px, 0, 0);
+	}
+
+	20%,
+	80% {
+		transform: translate3d(2px, 0, 0);
+	}
+
+	30%,
+	50%,
+	70% {
+		transform: translate3d(-2px, 0, 0);
+	}
+
+	40%,
+	60% {
+		transform: translate3d(2px, 0, 0);
+	}
+}
+
+.main-content {
+	margin: 20px auto;
+	width: 100vw;
+	height: 80vh;
+}

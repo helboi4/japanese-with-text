@@ -1,7 +1,13 @@
-import styles from "./page.module.css";
+import "./styles/home.css"
+import TextForm from "./components/textForm";
 
 export default function Home() {
 	return (
-		<h1>"Hello world"</h1>
+		<section className="main-content">
+			<div className="cta">
+				<h2>↓ Paste your Japanese text here! ↓</h2>
+			</div>
+			<TextForm></TextForm>
+		</section>
 	);
 }
