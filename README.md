@@ -10,12 +10,17 @@ When I set out to learn Japanese in around 2014, I found myself in an online Jap
 
 This is a love letter to that scene.
 
+# Progress pics
+
+<img width="823" height="738" alt="Screenshot 2025-10-24 183034" src="https://github.com/user-attachments/assets/5f1a5f70-0077-4d2d-9038-44270251b085" />
+
+
 # Feature progress
 
 - [x] [Custom Japanese-English dictionary psql database](https://github.com/helboi4/japanese-dict-db) with indexing for kanji and kana words for quick lookup
 - [x] API endpoint that parses large blocks of Japanese text into individual words and sends back json containing each word and its possible definitions from the db
-- [ ] [ML model made with TensorFlow](https://github.com/helboi4/tensorflow-translation-model/tree/main) that understands how to translate Japanese into English
-- [ ] API endpoint that calls the model and retruns English text
+- [x] ~~[ML model made with TensorFlow](https://github.com/helboi4/tensorflow-translation-model/tree/main) that understands how to translate Japanese into English~~ (This had to be replaced with meta nllb because of superior training
+- [x] API endpoint that calls the model and retruns English text
 - [ ] Frontend textbox form that calls the above two endpoints on submit and displays the data
 - [ ] Frontend interactive display of the original Japanese text that shows definitions on click of the word, side by side with english translation
 - [ ] API endpoint that takes a list of saved words and creates an anki deck from them and download button on frontend
