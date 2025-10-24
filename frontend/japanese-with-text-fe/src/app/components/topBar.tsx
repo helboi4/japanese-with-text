@@ -8,7 +8,7 @@ export default function TopBar() {
 					<h1>Dokumate</h1>
 				</div>
 				<div className="subtitle-text">
-					<p>...analyse Japanese text for learning</p>
+					<p>...analyze Japanese text for learning</p>
 				</div>
 			</div>
 		</div>
