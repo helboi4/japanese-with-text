@@ -1,4 +1,4 @@
-class BaseApi {
+export default class BaseApi {
 	base_url: string
 
 	constructor() {
