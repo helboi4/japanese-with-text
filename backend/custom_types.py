@@ -2,8 +2,11 @@ from enum import Enum
 from pydantic import BaseModel
 from psycopg.rows import DictRow
 
-class TextRequest(BaseModel):
+class LookupRequest(BaseModel):
     text: str
+
+class TranslateRequest(BaseModel):
+    text_chunks: list[str]
 
 class GrammarResponse(BaseModel):
     original_text: str
@@ -33,7 +36,7 @@ class LookupObject(BaseModel):
     kana_rows: list[DictRow]
 
 class TranslateResponse(BaseModel):
-    translated_text: str
+    translated_text: list[str]
     
 class Mode(Enum):
     KANJI = "kanji"

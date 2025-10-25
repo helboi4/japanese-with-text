@@ -7,13 +7,10 @@ from pydantic import BaseModel
 import openai
 from sudachipy import tokenizer
 from sudachipy import dictionary
-from custom_types import Mode, LookupResponse, TextRequest, GrammarResponse, TranslateResponse
+from custom_types import LookupRequest, Mode, LookupResponse, GrammarResponse, TranslateRequest, TranslateResponse
 import dict_service
 import translate_service
 # Load environment variables
-
-sudict = dictionary.Dictionary().create()
-mode = tokenizer.Tokenizer.SplitMode.C
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -40,16 +37,19 @@ async def root():
     return {"message": "Language Learning API is running!"}
 
 @app.post("/lookup-text", response_model=LookupResponse)
-def lookup_text(request: TextRequest):
+def lookup_text(request: LookupRequest):
+    sudict = dictionary.Dictionary().create()
+    mode = tokenizer.Tokenizer.SplitMode.C
+
     text = request.text
     tokenized_text = [m.surface() for m in sudict.tokenize(text, mode)]
     print(tokenized_text)
     return dict_service.get_lookup_response(tokenized_text)
 
 @app.post("/translate-text", response_model=TranslateResponse)
-def translate(request: TextRequest):
-    text = request.text
-    translate_result = translate_service.translate_text(text)
+def translate(request: TranslateRequest):
+    text_chunks = request.text_chunks
+    translate_result = translate_service.translate_text(text_chunks)
     if not translate_result:
         raise HTTPException(status_code=500, detail="Translator unavailable")
     return translate_result
