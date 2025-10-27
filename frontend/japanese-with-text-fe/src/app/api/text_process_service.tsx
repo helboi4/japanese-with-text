@@ -45,12 +45,7 @@ class TextProcessService extends BaseApi {
 
 const service = new TextProcessService()
 
-export async function testAction(formData: FormData) {
-	console.log("TEST ACTION CALLED")
-}
-
 export async function analyzeText(formData: FormData) {
-	console.log("here")
 	const text = formData.get("text") as string
 
 	let chunks = text.split("\n\n").filter(p => p.trim());
@@ -67,8 +62,6 @@ export async function analyzeText(formData: FormData) {
 		}
 	}
 
-	console.log(JSON.stringify(chunks));
-
 	const translationPromise = service.get_translation(chunks)
 	const lookupPromises = chunks.map(p => service.get_lookup(p));
 
@@ -77,24 +70,12 @@ export async function analyzeText(formData: FormData) {
 		Promise.all(lookupPromises)
 	])
 
-	console.log('Full response:', translations)
-	console.log('Type:', typeof translations)
 
 	const translation = translations.translated_text.join("\n\n");
 
-	console.log("Translation: ", translation)
-
-	const cookieStore = await cookies();
-
 	const resultsData = JSON.stringify({ translations, lookups })
 
-	console.log("storing")
-	console.log('Results size in bytes:', new Blob([resultsData]).size)
-	console.log('Results size in KB:', new Blob([resultsData]).size / 1024)
-
 	const id = saveResults(resultsData)
-
-	console.log("about to redirect")
 
 	redirect(`/analyze?analysis=${id}`)
 }
