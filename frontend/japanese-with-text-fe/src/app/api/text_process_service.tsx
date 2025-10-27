@@ -72,7 +72,7 @@ export async function analyzeText(formData: FormData) {
 
 	const data = {
 		firstLookup,
-		chunks: chunks.slice(1)
+		chunks: chunks
 	}
 
 	const id = await saveData(data)

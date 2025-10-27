@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getData } from "../cache/cache";
 import Spinner from "../components/spinner"
 import { lookupText } from "../api/text_process_service";
-import LookupResult from "../components/lookupParagraph";
+import LookupParagraph from "../components/lookupParagraph";
 
 export default async function AnalysisPage({
 	searchParams,
@@ -23,12 +23,10 @@ export default async function AnalysisPage({
 
 	return (
 		<section className=".main-content">
-			<div>
-				{firstLookup ? JSON.stringify(firstLookup) : "Fetch failed"}
-			</div>
-			{chunks.map((chunk: string, index: number) => (
+			<LookupParagraph chunk={chunks[0]} lookupData={firstLookup} />
+			{chunks.slice(1).map((chunk: string, index: number) => (
 				<Suspense key={index} fallback={<Spinner />}>
-					<LookupResult chunk={chunk} />
+					<LookupParagraph chunk={chunk} lookupData={null} />
 				</Suspense>
 			))}
 		</section>
