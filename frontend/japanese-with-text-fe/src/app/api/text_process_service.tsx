@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import BaseApi from "./base_api";
-import { saveResults } from "../cache/cache";
+import { saveData } from "../cache/cache";
 
 const BASE_URL = process.env.API_URL
 
@@ -29,6 +29,7 @@ class TextProcessService extends BaseApi {
 
 	async get_translation(text: string[]) {
 		const url = `${BASE_URL}/translate-text`
+
 		const request = new Request(
 			url,
 			{
@@ -44,6 +45,11 @@ class TextProcessService extends BaseApi {
 }
 
 const service = new TextProcessService()
+
+export async function lookupText(text: string) {
+	console.log("looking up")
+	return service.get_lookup(text)
+}
 
 export async function analyzeText(formData: FormData) {
 	const text = formData.get("text") as string
@@ -62,20 +68,14 @@ export async function analyzeText(formData: FormData) {
 		}
 	}
 
-	const translationPromise = service.get_translation(chunks)
-	const lookupPromises = chunks.map(p => service.get_lookup(p));
+	const firstLookup = await service.get_lookup(chunks[0])
 
-	const [translations, lookups] = await Promise.all([
-		translationPromise,
-		Promise.all(lookupPromises)
-	])
+	const data = {
+		firstLookup,
+		chunks: chunks.slice(1)
+	}
 
-
-	const translation = translations.translated_text.join("\n\n");
-
-	const resultsData = JSON.stringify({ translations, lookups })
-
-	const id = saveResults(resultsData)
+	const id = await saveData(data)
 
 	redirect(`/analyze?analysis=${id}`)
 }
