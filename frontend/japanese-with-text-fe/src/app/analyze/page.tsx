@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { getData } from "../cache/cache";
-import Spinner from "../components/spinner"
-import { lookupText } from "../api/text_process_service";
-import LookupParagraph from "../components/lookupParagraph";
+import { getData } from "../_cache/cache";
+import Spinner from "../_components/spinner"
+import { lookupText } from "../_api/text_process_service";
+import LookupParagraph from "../_components/lookupParagraph";
 
 export default async function AnalysisPage({
 	searchParams,

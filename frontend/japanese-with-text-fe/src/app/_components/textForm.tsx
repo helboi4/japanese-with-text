@@ -1,5 +1,5 @@
-import { analyzeText } from "../api/text_process_service"
-import "../styles/textform.css"
+import { analyzeText } from "../_api/text_process_service"
+import "../_styles/textform.css"
 import Form from "next/form"
 
 export default function TextForm() {

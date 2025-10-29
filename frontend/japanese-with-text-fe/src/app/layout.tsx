@@ -1,5 +1,5 @@
-import "./styles/globals.css";
-import TopBar from "./components/topBar";
+import "./_styles/globals.css";
+import TopBar from "./_components/topBar";
 import { Red_Hat_Display, Space_Mono, Noto_Sans_JP } from "next/font/google";
 
 const redHat = Red_Hat_Display({

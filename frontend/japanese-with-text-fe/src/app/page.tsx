@@ -1,5 +1,5 @@
-import "./styles/home.css"
-import TextForm from "./components/textForm";
+import "./_styles/home.css"
+import TextForm from "./_components/textForm";
 
 export default function Home() {
 	return (

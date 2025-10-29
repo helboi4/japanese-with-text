@@ -1,18 +1,19 @@
 'use server'
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import BaseApi from "./base_api";
-import { saveData } from "../cache/cache";
+import Base_api from "./base_api";
+import { saveData } from "../_cache/cache";
+import LookupResponse from "../_types/lookupResponse";
 
 const BASE_URL = process.env.API_URL
 
-class TextProcessService extends BaseApi {
+class TextProcessService extends Base_api {
 
 	constructor() {
 		super()
 	}
 
-	async get_lookup(text: string) {
+	async get_lookup(text: string): Promise<LookupResponse> {
 		const url = `${BASE_URL}/lookup-text`
 		const request = new Request(
 			url,
@@ -46,7 +47,7 @@ class TextProcessService extends BaseApi {
 
 const service = new TextProcessService()
 
-export async function lookupText(text: string) {
+export async function lookupText(text: string): Promise<LookupResponse> {
 	console.log("looking up")
 	return service.get_lookup(text)
 }
