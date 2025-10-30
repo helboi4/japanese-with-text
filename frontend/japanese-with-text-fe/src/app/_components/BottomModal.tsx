@@ -1,3 +1,5 @@
+import "../_styles/bottomModal.css"
+
 export default function BottomModal({ onClose, children, getFloatingProps, setFloating }) {
 
 	console.log(children);

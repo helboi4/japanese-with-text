@@ -1,0 +1,22 @@
+.analyzed-text{
+	margin: 10px;
+}
+
+.word-button {
+	color: var(--shadow-blue);
+	background: none;
+	padding: 5px;
+}
+
+.word-button:hover{
+	background: var(--yellow);
+}
+
+.word-button:focus{
+	background: var(--pink);
+}
+
+.lookup-paragraph{
+	margin: 10px;
+	background: rgba(195, 205, 232, 0.47);
+}

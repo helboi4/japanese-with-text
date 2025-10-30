@@ -7,28 +7,16 @@ export default async function LookupParagraph({ chunk, lookupData }: { chunk: st
 	let data = lookupData;
 	let definedWords: DefinedWord[] = [];
 	if (data !== null) {
-		console.log("data: ", data)
 		definedWords = data.defined_words;
 	} else {
 		data = await lookupText(chunk);
 		definedWords = data ? data.defined_words : [];
 	}
 
-	console.log("defined words: ", data.defined_words);
-
-	const renderWords = () => {
-		for (const word of definedWords) {
-			console.log("word: ", word.original_word)
-			return (
-				<Word definedWord={word}></Word>
-			)
-		}
-	}
-
-	return (<div>
+	return (<div className="lookup-paragraph">
 		{
-			definedWords.map((word) => (
-				<Word definedWord={word}></Word>
+			definedWords.map((word: DefinedWord, index: number) => (
+				<Word key={index} definedWord={word}></Word>
 			))
 		}
 	</div>)

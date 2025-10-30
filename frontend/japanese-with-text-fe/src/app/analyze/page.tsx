@@ -1,3 +1,4 @@
+import "../_styles/analyze.css"
 import { Suspense } from "react";
 import { getData } from "../_cache/cache";
 import Spinner from "../_components/spinner"
@@ -23,12 +24,14 @@ export default async function AnalysisPage({
 
 	return (
 		<section className=".main-content">
-			<LookupParagraph chunk={chunks[0]} lookupData={firstLookup} />
-			{chunks.slice(1).map((chunk: string, index: number) => (
-				<Suspense key={index} fallback={<Spinner />}>
-					<LookupParagraph chunk={chunk} lookupData={null} />
-				</Suspense>
-			))}
+			<section className="analyzed-text">
+				<LookupParagraph chunk={chunks[0]} lookupData={firstLookup} />
+				{chunks.slice(1).map((chunk: string, index: number) => (
+					<Suspense key={index} fallback={<Spinner />}>
+						<LookupParagraph chunk={chunk} lookupData={null} />
+					</Suspense>
+				))}
+			</section>
 		</section>
 	)
 }

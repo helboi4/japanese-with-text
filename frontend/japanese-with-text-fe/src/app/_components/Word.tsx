@@ -47,40 +47,20 @@ export default function Word({ definedWord }: { definedWord: DefinedWord }) {
 
 	return (
 		<>
-			<button ref={refs.setReference} {...getReferenceProps()}>{definedWord.original_word}</button>
+			<button className="word-button" ref={refs.setReference} {...getReferenceProps()}>{definedWord.original_word}</button>
 			{isOpen && (
 				isMobile ? (
 					<BottomModal setFloating={refs.setFloating} getFloatingProps={getFloatingProps}
 						onClose={() => setIsOpen(false)}>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-						</p>
-						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+							{JSON.stringify(definedWord.dict_entries)}
 						</p>
 					</BottomModal>
 				) : (
 					< Tooltip setFloating={refs.setFloating} floatingStyles={floatingStyles} getFloatingProps={getFloatingProps}>
-						Tooltip with lots of stuff in it
-						<button>another button</button>
 						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+							{JSON.stringify(definedWord.dict_entries)}
 						</p>
-						<p>
-							There are many example projects created by the React community. We’re keeping this page focused on the ones that use React without third-party state management libraries.
-
-							If you add a project, please commit to keeping it up to date with the latest versions of React.
-							dgsdgfsgsfgsfgsf
-
-							f
-							hsfhfghsfghsf
-
-							fhsfhsfhsfh
-
-							sfhsfhhsfhsfMeta Front-End Developer Professional Certificate - Launch your career as a front-end developer. Build job-ready skills for an in-demand career and earn a credential from Meta. No degree or prior experience required to get started.
-						</p>
-
 					</Tooltip >
 				)
 			)
