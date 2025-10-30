@@ -70,9 +70,10 @@ def get_dict_entries_for_text(morphemes: list[str]) -> list[list[DictRow]]:
                                 (COALESCE(array_length(word_kanji, 1), 0) > 0)::int, id;
                                 """
                         else:
-                            query = "SELECT * FROM entries WHERE word_kanji @> array[%s];"
+                            query = "SELECT * FROM entries WHERE word_kanji @> ARRAY[%s];"
                         cur.execute(query, (m,))
-                        results.append(cur.fetchall())
+                        result = cur.fetchall()
+                        results.append(result)
                     return results
             except (DataError, IntegrityError, ProgrammingError, TypeError) as e:
                 log.debug(f"Entry selection failed: {str(e)}")
@@ -104,6 +105,6 @@ def get_senses_by_entry_id(id: int) -> list[DictRow]:
 
 def get_mode(morpheme:str) -> Mode:
     for m in list(morpheme):
-        if(0x4E00 <=ord(m) >= 0x9FAF):
+        if(0x4E00 <=ord(m) <= 0x9FAF):
             return Mode.KANJI
     return Mode.KANA

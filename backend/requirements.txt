@@ -14,3 +14,5 @@ tensorflow==2.19.0
 tensorflow-text==2.19.0
 transformers[torch]==4.57.1
 bitsandbytes==0.48.1
+fugashi==1.5.2
+unidic-lite==1.0.8

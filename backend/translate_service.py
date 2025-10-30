@@ -1,3 +1,4 @@
+import torch
 from custom_types import TranslateResponse
 import logging
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, BitsAndBytesConfig
@@ -6,8 +7,12 @@ logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=loggin
 log = logging.getLogger(__name__)
 
 bnb_config = BitsAndBytesConfig(load_in_8bit=True)
-model = AutoModelForSeq2SeqLM.from_pretrained("facebook/nllb-200-distilled-1.3B", quantization_config=bnb_config)
-tokenizer = AutoTokenizer.from_pretrained("facebook/nllb-200-distilled-1.3B")
+model = AutoModelForSeq2SeqLM.from_pretrained(
+    "facebook/nllb-200-distilled-600M", 
+    quantization_config=bnb_config,
+    device_map="auto"
+)
+tokenizer = AutoTokenizer.from_pretrained("facebook/nllb-200-distilled-600M")
 
 def translate_text(text_chunks: list[str]) -> TranslateResponse | None:
     tokenizer.src_lang = "jpn_Jpan"

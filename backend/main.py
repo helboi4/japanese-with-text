@@ -38,13 +38,11 @@ async def root():
 
 @app.post("/lookup-text", response_model=LookupResponse)
 def lookup_text(request: LookupRequest):
-    sudict = dictionary.Dictionary().create()
     mode = tokenizer.Tokenizer.SplitMode.C
-
+    sudict = dictionary.Dictionary().create(mode=mode)
     text = request.text
-    tokenized_text = [m.surface() for m in sudict.tokenize(text, mode)]
-    print(tokenized_text)
-    return dict_service.get_lookup_response(tokenized_text)
+    morphemes = sudict.tokenize(text);
+    return dict_service.get_lookup_response(morphemes)
 
 @app.post("/translate-text", response_model=TranslateResponse)
 def translate(request: TranslateRequest):

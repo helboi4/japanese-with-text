@@ -42,3 +42,11 @@ class Mode(Enum):
     KANJI = "kanji"
     KANA = "kana"
 
+class Morph(BaseModel):
+    word: str
+    morphemes: list
+
+class WordWithDictForm(BaseModel):
+    conjugated: str
+    dict_form: str
+
