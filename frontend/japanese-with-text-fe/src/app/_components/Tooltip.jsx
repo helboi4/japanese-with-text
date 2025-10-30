@@ -1,4 +1,4 @@
-
+import "../_styles/tooltip.css"
 import { FloatingArrow } from "@floating-ui/react"
 
 export default function Tooltip({ setFloating, floatingStyles, getFloatingProps, children }) {

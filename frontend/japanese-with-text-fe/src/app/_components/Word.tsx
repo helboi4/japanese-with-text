@@ -5,6 +5,7 @@ import { autoUpdate, useFloating, useRole, useClick, useDismiss, useInteractions
 import BottomModal from "./BottomModal";
 import Tooltip from "./Tooltip"
 import { useIsMobile } from "../_utils/useIsMobile";
+import DictEntryDisplay from "./dictEntryDisplay";
 
 export default function Word({ definedWord }: { definedWord: DefinedWord }) {
 
@@ -45,6 +46,14 @@ export default function Word({ definedWord }: { definedWord: DefinedWord }) {
 		role,
 	])
 
+	const getDictEntryDisplays = () => {
+		return (
+			definedWord.dict_entries.map((entry, index) => (
+				<DictEntryDisplay key={index} entry={entry}></DictEntryDisplay>
+			))
+		)
+	}
+
 	return (
 		<>
 			<button className="word-button" ref={refs.setReference} {...getReferenceProps()}>{definedWord.original_word}</button>
@@ -52,15 +61,11 @@ export default function Word({ definedWord }: { definedWord: DefinedWord }) {
 				isMobile ? (
 					<BottomModal setFloating={refs.setFloating} getFloatingProps={getFloatingProps}
 						onClose={() => setIsOpen(false)}>
-						<p>
-							{JSON.stringify(definedWord.dict_entries)}
-						</p>
+						{getDictEntryDisplays()}
 					</BottomModal>
 				) : (
 					< Tooltip setFloating={refs.setFloating} floatingStyles={floatingStyles} getFloatingProps={getFloatingProps}>
-						<p>
-							{JSON.stringify(definedWord.dict_entries)}
-						</p>
+						{getDictEntryDisplays()}
 					</Tooltip >
 				)
 			)
