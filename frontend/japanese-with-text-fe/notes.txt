@@ -1,0 +1,6 @@
+- I need a loading.tsx for the analyze page
+- I should probably add a "type of word" field for DictEntry in the backend
+because it would be useful to display that on the frontend
+- Perhaps could fix the issue with iru by ordering results by checking the
+"type of word" of the word before it and then if the type of word is a verb
+then we make sure its the "to be" definition of iru first.

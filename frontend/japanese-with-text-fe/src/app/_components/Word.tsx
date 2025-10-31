@@ -1,4 +1,5 @@
 'use client'
+import "../_styles/word.css"
 import { useState, useRef } from "react";
 import DefinedWord from "../_types/definedWord";
 import { autoUpdate, useFloating, useRole, useClick, useDismiss, useInteractions, autoPlacement, size, offset, flip, shift, useId } from '@floating-ui/react';

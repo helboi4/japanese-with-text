@@ -16,7 +16,7 @@ const spaceMono = Space_Mono({
 
 const mPlus1 = Noto_Sans_JP({
 	subsets: ["latin-ext"],
-	weight: ['300'],
+	weight: ["300", "400", "700"],
 	variable: "--font-noto-sans"
 })
 

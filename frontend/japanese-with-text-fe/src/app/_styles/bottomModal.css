@@ -1,3 +1,33 @@
-.bottom-modal-container{
-	background-color: var(--shadow-blue);
+.bottom-modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 9999;
+	display: flex;
+	align-items: flex-end;
 }
+
+.bottom-modal-container {
+	background-color: var(--shadow-blue);
+	width: 100%;
+	max-height: 80vh;
+	padding: 20px;
+	overflow-y: auto;
+	animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+	from { transform: translateY(100%); }
+	to { transform: translateY(0); }
+}
+
+.bottom-modal-close {
+	padding: 5px;
+	margin-bottom: 16px;
+	float: right;
+	background-color: transparent;
+	color: var(--yellow);
+	font-size: 40px;
+	font-family: Arial;
+}
+

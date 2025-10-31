@@ -18,7 +18,8 @@
 	resize: none;
 	box-sizing: border-box;
 	font-size: 1rem;
-	font-family: var(--font-noto-sans)
+	font-family: var(--font-noto-sans), sans-serif;
+	font-weight: 300;
 }
 
 .text-box:focus {
