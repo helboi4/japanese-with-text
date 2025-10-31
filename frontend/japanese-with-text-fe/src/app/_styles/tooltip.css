@@ -1,3 +1,25 @@
 .tooltip {
 	background-color: var(--shadow-blue);
 }
+
+@media(min-width: 1200px) {
+	.tooltip {
+		max-width: 40vw;
+	}
+}
+
+@media(min-width: 1025px) {
+	.tooltip {
+		max-width:50vw;
+	}
+}
+
+@media(max-width: 1024px) {
+	.tooltip{
+		max-width: 60vw;
+	}
+}
+
+.tooltip-content {
+	padding: 0px 30px 15px 20px;
+}

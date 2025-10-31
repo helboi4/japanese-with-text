@@ -1,6 +1,6 @@
 'use client'
 import "../_styles/word.css"
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import DefinedWord from "../_types/definedWord";
 import { autoUpdate, useFloating, useRole, useClick, useDismiss, useInteractions, autoPlacement, size, offset, flip, shift, useId } from '@floating-ui/react';
 import BottomModal from "./BottomModal";
@@ -15,13 +15,13 @@ export default function Word({ definedWord }: { definedWord: DefinedWord }) {
 
 	const isMobile = useIsMobile(600);
 
-	const { refs, floatingStyles, context } = useFloating({
+	const { refs, floatingStyles, context, middlewareData } = useFloating({
 		open: isOpen,
 		onOpenChange: setIsOpen,
 		middleware: [
 			offset(5),
 			autoPlacement({ padding: 10 }),
-			shift({ padding: 10 }),
+			shift({ padding: 10, crossAxis: true }),
 			size({
 				apply({ availableHeight, elements }) {
 					Object.assign(elements.floating.style, {
@@ -34,6 +34,12 @@ export default function Word({ definedWord }: { definedWord: DefinedWord }) {
 		],
 		whileElementsMounted: autoUpdate,
 	})
+
+	useEffect(() => {
+		if (isOpen && middlewareData) {
+			console.log("shift data: ", middlewareData.shift);
+		}
+	}, [isOpen, middlewareData]);
 
 	const click = useClick(context);
 	const dismiss = useDismiss(context, {
