@@ -13,7 +13,8 @@ This is a love letter to that scene.
 # Progress pics
 
 <img width="832" height="794" alt="Screenshot 2025-10-24 184137" src="https://github.com/user-attachments/assets/20ac40e3-891f-4735-b34f-2b0a8ef74bf7" />
-<img width="603" height="664" alt="Screenshot 2025-10-31 143111" src="https://github.com/user-attachments/assets/0dbbdfa8-aee2-4651-a259-725509f3e273" />
+<img width="992" height="682" alt="Screenshot 2025-10-31 205926" src="https://github.com/user-attachments/assets/7dd83fdf-36cf-425b-a1f8-27a6e5795b97" />
+
 
 # Feature progress
 
