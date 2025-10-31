@@ -21,13 +21,4 @@
 	to { transform: translateY(0); }
 }
 
-.bottom-modal-close {
-	padding: 5px;
-	margin-bottom: 16px;
-	float: right;
-	background-color: transparent;
-	color: var(--yellow);
-	font-size: 40px;
-	font-family: Arial;
-}
 

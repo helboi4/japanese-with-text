@@ -71,7 +71,7 @@ export default function Word({ definedWord }: { definedWord: DefinedWord }) {
 						{getDictEntryDisplays()}
 					</BottomModal>
 				) : (
-					< Tooltip setFloating={refs.setFloating} floatingStyles={floatingStyles} getFloatingProps={getFloatingProps}>
+					< Tooltip onClose={() => setIsOpen(false)} setFloating={refs.setFloating} floatingStyles={floatingStyles} getFloatingProps={getFloatingProps}>
 						{getDictEntryDisplays()}
 					</Tooltip >
 				)

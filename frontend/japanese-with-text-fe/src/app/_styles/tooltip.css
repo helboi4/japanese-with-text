@@ -23,3 +23,7 @@
 .tooltip-content {
 	padding: 0px 30px 15px 20px;
 }
+
+.tooltip-close-wrapper {
+	padding-right: 10px;
+}
